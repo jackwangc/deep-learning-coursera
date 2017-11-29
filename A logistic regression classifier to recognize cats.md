@@ -165,6 +165,10 @@ def predict(w, b, X):
 
 ### 5.1 model 
 
+- Preprocessing the dataset is important.
+- You implemented each function separately: initialize(), propagate(), optimize(). Then you built a model().
+- Tuning the learning rate (which is an example of a "hyperparameter") can make a big difference to the algorithm.
+
 ```
 #建立整个预测模型
 def model(X_train, Y_train, X_test, Y_test, num_iterations = 2000, learning_rate = 0.5, print_cost = False): #num_iterations-梯度下降次数 learning_rate-学习率，即参数ɑ
