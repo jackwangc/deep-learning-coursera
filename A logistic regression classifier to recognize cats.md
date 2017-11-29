@@ -45,6 +45,16 @@ def sigmoid(z):
 ```
 #初始化参数w,b
 def initialize_with_zeros(dim):
+    """
+    This function creates a vector of zeros of shape (dim, 1) for w and initializes b to 0.
+    
+    Argument:
+    dim -- size of the w vector we want (or number of parameters in this case)
+    
+    Returns:
+    w -- initialized vector of shape (dim, 1)
+    b -- initialized scalar (corresponds to the bias)
+    """
     w = np.zeros((dim,1)) #w为一个dim*1矩阵
     b = 0    
     return w, b
@@ -55,6 +65,20 @@ def initialize_with_zeros(dim):
 ```
 #计算Y_hat,成本函数J以及dw，db
 def propagate(w, b, X, Y):
+    """
+    Implement the cost function and its gradient for the propagation explained above
+
+    Arguments:
+    w -- weights, a numpy array of size (num_px * num_px * 3, 1)
+    b -- bias, a scalar
+    X -- data of size (num_px * num_px * 3, number of examples)
+    Y -- true "label" vector (containing 0 if non-cat, 1 if cat) of size (1, number of examples)
+
+    Return:
+    cost -- negative log-likelihood cost for logistic regression
+    dw -- gradient of the loss with respect to w, thus same shape as w
+    db -- gradient of the loss with respect to b, thus same shape as b
+    """
     m = X.shape[1] #样本个数
     Y_hat = sigmoid(np.dot(w.T,X)+b)                                     
     cost = -(np.sum(np.dot(Y,np.log(Y_hat).T)+np.dot((1-Y),np.log(1-Y_hat).T)))/m #成本函数
@@ -71,6 +95,24 @@ def propagate(w, b, X, Y):
 ```
 #梯度下降找出最优解
 def optimize(w, b, X, Y, num_iterations, learning_rate, print_cost = False):#num_iterations-梯度下降次数 learning_rate-学习率，即参数ɑ
+    """
+    This function optimizes w and b by running a gradient descent algorithm
+    
+    Arguments:
+    w -- weights, a numpy array of size (num_px * num_px * 3, 1)
+    b -- bias, a scalar
+    X -- data of shape (num_px * num_px * 3, number of examples)
+    Y -- true "label" vector (containing 0 if non-cat, 1 if cat), of shape (1, number of examples)
+    num_iterations -- number of iterations of the optimization loop
+    learning_rate -- learning rate of the gradient descent update rule
+    print_cost -- True to print the loss every 100 steps
+    
+    Returns:
+    params -- dictionary containing the weights w and bias b
+    grads -- dictionary containing the gradients of the weights and bias with respect to the cost function
+    costs -- list of all the costs computed during the optimization, this will be used to plot the learning curve.
+    """
+    
     costs = [] #记录成本值
     for i in range(num_iterations): #循环进行梯度下降
         grads, cost = propagate(w,b,X,Y)
@@ -95,6 +137,17 @@ def optimize(w, b, X, Y, num_iterations, learning_rate, print_cost = False):#num
 ```
 #预测出结果
 def predict(w, b, X):
+    '''
+    Predict whether the label is 0 or 1 using learned logistic regression parameters (w, b)
+    
+    Arguments:
+    w -- weights, a numpy array of size (num_px * num_px * 3, 1)
+    b -- bias, a scalar
+    X -- data of size (num_px * num_px * 3, number of examples)
+    
+    Returns:
+    Y_prediction -- a numpy array (vector) containing all predictions (0/1) for the examples in X
+    '''
     m = X.shape[1] #样本个数
     Y_prediction = np.zeros((1,m)) #初始化预测输出
     w = w.reshape(X.shape[0], 1) #转置参数向量w
@@ -115,6 +168,21 @@ def predict(w, b, X):
 ```
 #建立整个预测模型
 def model(X_train, Y_train, X_test, Y_test, num_iterations = 2000, learning_rate = 0.5, print_cost = False): #num_iterations-梯度下降次数 learning_rate-学习率，即参数ɑ
+    """
+    Builds the logistic regression model by calling the function you've implemented previously
+    
+    Arguments:
+    X_train -- training set represented by a numpy array of shape (num_px * num_px * 3, m_train)
+    Y_train -- training labels represented by a numpy array (vector) of shape (1, m_train)
+    X_test -- test set represented by a numpy array of shape (num_px * num_px * 3, m_test)
+    Y_test -- test labels represented by a numpy array (vector) of shape (1, m_test)
+    num_iterations -- hyperparameter representing the number of iterations to optimize the parameters
+    learning_rate -- hyperparameter representing the learning rate used in the update rule of optimize()
+    print_cost -- Set to true to print the cost every 100 iterations
+    
+    Returns:
+    d -- dictionary containing information about the model.
+    """
     w, b = initialize_with_zeros(X_train.shape[0]) #初始化参数w，b
     parameters, grads, costs = optimize(w, b, X_train, Y_train, num_iterations, learning_rate, print_cost) #梯度下降找到最优参数
     w = parameters["w"]
